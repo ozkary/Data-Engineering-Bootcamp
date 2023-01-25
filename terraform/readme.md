@@ -21,3 +21,5 @@ terraform plan -var="project=<your-gcp-project-id>"
 terraform apply -var="project=<your-gcp-project-id>"
 # Delete infra after your work, to avoid costs on any running services
 terraform destroy
+
+ozkary-de-101

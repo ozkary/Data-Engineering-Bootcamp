@@ -14,6 +14,9 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=root
+      - PGADMIN_LISTEN_POST=8080
+      - PGADMIN_CONFIG_PROXY_X_HOST_COUNT=1
+      - PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT=1
     volumes:
       - "pgadmin_conn_data:/var/lib/pgadmin:rw"
     ports:

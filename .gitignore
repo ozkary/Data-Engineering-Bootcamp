@@ -1,1 +1,4 @@
-./docker/ny_taxi_postgres_data
+docker/ny_taxi_postgres_data
+*.log
+*.tfstate
+*.backup
