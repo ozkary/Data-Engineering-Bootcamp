@@ -12,7 +12,7 @@ gcloud auth application-default login
 
 # Open the terraform folder in your project
 
-# Initialize state file (.tfstate)
+# Initialize state file (.tfstate) one time run which should create main.tf
 terraform init
 
 # Check changes to new infra plan
