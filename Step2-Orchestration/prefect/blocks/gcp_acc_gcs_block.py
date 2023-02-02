@@ -6,9 +6,6 @@ from pathlib import Path
 from prefect_gcp import GcpCredentials
 from prefect_gcp.cloud_storage import GcsBucket
 
-# insert your own service_account_file path or service_account_info dictionary from the json file
-# IMPORTANT - do not store credentials in a publicly available repository!
-
 def main(params) -> None:
     """entry point to create the prefect block for gcs"""
     gcp_file_path = params.file_path
