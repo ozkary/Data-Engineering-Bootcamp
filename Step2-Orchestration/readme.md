@@ -54,13 +54,16 @@ $ python docker_block.py --block_name=blk-docker-de-101 --image_name=ozkary/pref
 
 Create the prefect deployments with the docker image
 $ cd ./Step2-Orchestration/prefect/flows
-$ python docker_deploy_etl_web_to_gcs.py --block_name=blk-docker-de-101 --deploy_name=dep-docker-de-101
+$ python docker_deploy_etl_web_to_gcs.py --block_name=blk-docker-de-101 --deploy_name=dep-docker-de-gcs-101
+$ python docker_deploy_etl_gcs_to_bq.py --block_name=blk-docker-de-101 --deploy_name=dep-docker-de-gbq-101
 $ prefect deployments ls
 $ prefect agent start -q default
 $ prefect deployment run dep-docker-de-101 -p "year=2020 month=1 color=green block_name=blk-gcs-name"
 
-Run this manually
+Manual Test Runs
 $ python etl_web_to_gcs.py --year=2020 --month=1 --color=green --block_name=blk-gcs-name
+
+$ python etl_gcs_to_bq.py --year=2019 --month=2 --color=yellow --block_name=blk-gcs-name --acc_block_name=blk-gcp-svc-acc --table_name=yellow_trips --project_id=
 
 TODO 
 - load the bigquery data

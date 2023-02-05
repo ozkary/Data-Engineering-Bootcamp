@@ -3,29 +3,39 @@
 
 import argparse
 from pathlib import Path
+import os.path
 import pandas as pd
 from prefect import flow, task
 from prefect_gcp.cloud_storage import GcsBucket
-from random import randint
 from prefect.tasks import task_input_hash
 from datetime import timedelta
 
 
-@task(name="download the data", retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1))
-def fetch(dataset_url: str) -> pd.DataFrame:
+@task(name="download the data", log_prints=True, retries=0, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1))
+def fetch(dataset_url: str, color: str, dataset_file: str ) -> Path:
     """Read taxi data from web into pandas DataFrame"""
-    # if randint(0, 1) > 0:
-    #     raise Exception
+    print(f"data url {dataset_url}")
+    df_iter = pd.read_csv(dataset_url, iterator=True, chunksize=100000) 
 
-    df = pd.read_csv(dataset_url)
-    return df
+    while True:
+        try:
+            df = next(df_iter)
+            df_clean = clean(df)
+            path = write_local(df_clean, color, dataset_file)
+
+        except StopIteration:
+            print("Finished creating parquet data")
+            break
+        
+
+    return path
 
 
 @task(name="clean data",log_prints=True)
 def clean(df: pd.DataFrame) -> pd.DataFrame:
     """Fix dtype issues"""
-    df["lpep_pickup_datetime"] = pd.to_datetime(df["lpep_pickup_datetime"])
-    df["lpep_dropoff_datetime"] = pd.to_datetime(df["lpep_dropoff_datetime"])
+    df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"])
+    df["tpep_dropoff_datetime"] = pd.to_datetime(df["tpep_dropoff_datetime"])
     print(df.head(2))
     print(f"columns: {df.dtypes}")
     print(f"rows: {len(df)}")
@@ -33,10 +43,14 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @task(name="write locally")
-def write_local(df: pd.DataFrame, color: str, dataset_file: str) -> Path:
-    """Write DataFrame out locally as parquet file"""
-    path = Path(f"../data/{color}/{dataset_file}.parquet")
-    df.to_parquet(path, compression="gzip")
+def write_local(df: pd.DataFrame, path: Path) -> Path:
+    """Write DataFrame out locally as parquet file"""    
+
+    if not os.path.isfile(path):
+        df.to_parquet(path, compression="gzip", engine='fastparquet')
+    else:
+        df.to_parquet(path, compression="gzip", engine='fastparquet', append=True)
+        
     return path
 
 
@@ -53,18 +67,34 @@ def etl_web_to_gcs(year: int, month: int, color: str, block_name: str) -> None:
     """The main ETL function"""
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
     dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{dataset_file}.csv.gz"
+    #  examples:
     # https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2020-01.csv.gz
+    # https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-03.csv.gz
 
-    df = fetch(dataset_url)
-    df_clean = clean(df)
-    path = write_local(df_clean, color, dataset_file)
-    write_gcs(path, block_name)
+    df_iter = pd.read_csv(dataset_url, iterator=True, chunksize=100000) 
+    if df_iter:
+        path = Path(f"../data/{color}/{dataset_file}.parquet")
+        while True:
+            try:
+                df = next(df_iter)
+                df_clean = clean(df)
+                write_local(df_clean, path)
+            except StopIteration:
+                print("Finished creating parquet data")
+                break
+
+        print(f"dataframe was loaded {path}")
+        # df_clean = clean(df)
+        # path = write_local(df_clean, color, dataset_file)
+        write_gcs(path, block_name)
+    else:
+        print("dataframe failed")
 
 
-@flow()
-def etl_parent_flow(months: list[int] = [1, 2], year: int = 2021, color: str = "yellow") -> None:
-    for month in months:
-        etl_web_to_gcs(year, month, color)
+# @flow()
+# def etl_parent_flow(months: list[int] = [1, 2], year: int = 2021, color: str = "yellow") -> None:
+#     for month in months:
+#         etl_web_to_gcs(year, month, color)
 
 @flow(name="Flow entry function")
 def main_flow(params) -> None:
