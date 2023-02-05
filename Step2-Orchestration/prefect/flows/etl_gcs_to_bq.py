@@ -12,10 +12,11 @@ from prefect_gcp import GcpCredentials
 @task(name="Return the paqrquet file path from GCS", retries=3)
 def extract_from_gcs(color: str, year: int, month: int, block_name: str) -> Path:
     """Download trip data from GCS"""
-    gcs_path = f"data/{color}/{color}_tripdata_{year}-{month:02}.parquet"
+    gcs_path = f"{color}/{color}_tripdata_{year}-{month:02}.parquet"
     gcs_block = GcsBucket.load(block_name)
-    gcs_block.get_directory(from_path=gcs_path, local_path="./data/")
-    return Path(f"data/{gcs_path}")
+    gcs_block.get_directory(from_path=gcs_path, local_path="../data/")
+    print(gcs_path)
+    return Path(f"../data/{gcs_path}")
 
 
 @task(name="Data trasnformation task")
@@ -43,11 +44,12 @@ def write_bq(df: pd.DataFrame, acc_block_name: str, table_name: str, project_id:
     )
 
 
-@flow(name="Mode data from GCS to GBQ")
+@flow(name="Mode data from GCS to GBQ", log_prints=True)
 def etl_gcs_to_bq(year: int, month: int, color: str, block_name: str, acc_block_name: str, table_name: str, project_id: str) -> None:
     """Main ETL flow to load data into Big Query"""    
     path = extract_from_gcs(color, year, month, block_name)
-    df = transform(path)
+    df = pd.read_parquet(path) 
+    # transform(path)
     write_bq(df, acc_block_name, table_name, project_id)
 
 @flow(name="Flow entry function")
@@ -62,10 +64,7 @@ def main_flow(params) -> None:
     project_id = params.project_id
     
     etl_gcs_to_bq(year, month, color, block_name, acc_block_name, table_name, project_id)
-    
-if __name__ == "__main__":
-    etl_gcs_to_bq()
-    
+   
 
 if __name__ == '__main__':
     """main entry point with argument parser"""

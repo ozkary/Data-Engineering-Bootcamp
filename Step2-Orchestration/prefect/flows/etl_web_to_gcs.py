@@ -10,8 +10,8 @@ from prefect_gcp.cloud_storage import GcsBucket
 from prefect.tasks import task_input_hash
 from datetime import timedelta
 
-
-@task(name="download the data", log_prints=True, retries=0, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1))
+# remove to prevent erros on container  cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1)
+@task(name="download the data", log_prints=True, retries=2)
 def fetch(dataset_url: str, color: str, dataset_file: str ) -> Path:
     """Read taxi data from web into pandas DataFrame"""
     print(f"data url {dataset_url}")
@@ -34,8 +34,8 @@ def fetch(dataset_url: str, color: str, dataset_file: str ) -> Path:
 @task(name="clean data",log_prints=True)
 def clean(df: pd.DataFrame) -> pd.DataFrame:
     """Fix dtype issues"""
-    df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"])
-    df["tpep_dropoff_datetime"] = pd.to_datetime(df["tpep_dropoff_datetime"])
+    df["lpep_pickup_datetime"] = pd.to_datetime(df["lpep_pickup_datetime"])
+    df["lpep_dropoff_datetime"] = pd.to_datetime(df["lpep_dropoff_datetime"])
     print(df.head(2))
     print(f"columns: {df.dtypes}")
     print(f"rows: {len(df)}")
