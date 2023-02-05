@@ -1,4 +1,5 @@
 docker/ny_taxi_postgres_data
+Step1-Introduction/docker/ny_taxi_postgres_data
 *.log
 *.tfstate
 *.backup
