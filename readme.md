@@ -1,6 +1,6 @@
 # Overview
 
-This is a code repo dedicated to following a data engineering bootcamp. As we make progress on the course, I am adding my thoughts and approach on the course. 
+This is a code repo dedicated to following a data engineering bootcamp. As we make progress on the course, I am adding my thoughts, approach and solutions. 
 
 ## Technologies
 - Docker, Docker Hub
