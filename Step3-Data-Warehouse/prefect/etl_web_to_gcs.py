@@ -63,7 +63,7 @@ def write_local(df: pd.DataFrame, folder: str, file_name: str) -> Path:
     if not os.path.isfile(file_path):
         df.to_csv(file_path, compression="gzip")
     else:
-        df.to_csv(file_path, compression="gzip", mode="a")
+        df.to_csv(file_path, header=None, compression="gzip", mode="a", )
         
     return file_path
 
@@ -83,7 +83,7 @@ def etl_web_to_gcs(year: int, month: int, prefix: str, block_name: str, url: str
     dataset_url = f"{url}/{dataset_file}.csv.gz"
     print(dataset_url)
 
-    df_iter = pd.read_csv(dataset_url, iterator=True, chunksize=500000) 
+    df_iter = pd.read_csv(dataset_url, iterator=True, chunksize=150000) 
     if df_iter:
         path = f"../data/{prefix}"
         file_name = f"{dataset_file}.csv.gz"
@@ -92,7 +92,7 @@ def etl_web_to_gcs(year: int, month: int, prefix: str, block_name: str, url: str
         file_path = Path(f"{path}/{file_name}")
         if os.path.exists(file_path):
              print(f"File found {file_path}")
-             write_gcs(file_path, block_name)
+            #  write_gcs(file_path, block_name)
              return
 
         while True:
@@ -101,9 +101,13 @@ def etl_web_to_gcs(year: int, month: int, prefix: str, block_name: str, url: str
                 print(df.columns)                
                 df_clean = clean(df)
                 write_local(df_clean, path, file_name)
-            except StopIteration:
-                print("Finished creating file")
+            except StopIteration as ex:
+                print(f"Finished reading file {ex}")
                 break
+            except Exception as ex:
+                print(f"Error found {ex}")
+                return
+                
 
         print(f"file was loaded {file_path}")
         # df_clean = clean(df)
