@@ -30,3 +30,22 @@ More...
 - Parametrizing workflows
 - Prefect Cloud and additional resources
 - Homework
+
+### Week 3: Data Warehouse
+
+- BigQuery
+- Partitioning and clustering
+- BigQuery best practices
+- Internals of BigQuery
+- Integrating BigQuery with Prefect and AirFlow
+- BigQuery Machine Learning
+
+### Week 4: Analytics engineering
+
+- Basics of analytics engineering
+- dbt (data build tool)
+- BigQuery and dbt
+- dbt models
+- Testing and documenting
+- Deployment to the cloud and locally
+- Visualizing the data with google data studio and metabase

@@ -1,0 +1,69 @@
+version: 2
+
+sources:
+    - name: staging
+      #For bigquery:
+      database: ozkary-de-101
+
+      # For postgres:
+      # database: production
+
+      schema: trips_data
+
+      # loaded_at_field: record_loaded_at
+      tables:
+        - name: fhv_rides
+         # freshness:
+           # error_after: {count: 6, period: hour}
+
+models:
+    - name: stg_fhv_tripdata
+      description: >
+        Trip information made by the FHV (For Hire Vehicles) in the city of New York, USA
+      columns:
+          - name: tripid
+            description: Primary key for this table, generated with a concatenation of affiliated+pickup_datetime
+            tests:
+                - unique:
+                    severity: warn
+                - not_null:
+                    severity: warn
+          - name: ref_id
+            description: A reference external id        
+          - name: dispatching_base_num
+            description:  the dispatch base id
+          - name: Affiliated_base_number 
+            description: The affiliated base number
+          - name: pickup_datetime 
+            description: The date and time when the meter was engaged.
+          - name: dropoff_datetime 
+            description: The date and time when the meter was disengaged.
+          - name: pickup_locationid
+            description: locationid where the meter was engaged.
+            tests:
+              - relationships:
+                  to: ref('taxi_zone_lookup')
+                  field: locationid
+                  severity: warn
+          - name: dropoff_locationid 
+            description: locationid where the meter was engaged.
+            tests:
+              - relationships:
+                  to: ref('taxi_zone_lookup')
+                  field: locationid
+          - name: share_ride 
+            description: > 
+              Indicates if the trip was a part of a shared ride chain offered by a
+              High Volume FHV company (e.g. Uber Pool, Lyft Line). For shared
+              trips, the value is 1. For non-shared rides, this field is null.      
+          - name: Payment_type 
+            description: >
+              A numeric code signifying how the passenger paid for the trip.
+            tests: 
+              - accepted_values:
+                  values: "{{ var('payment_type_values') }}"
+                  severity: warn
+                  quote: false
+          - name: payment_type_description
+            description: Description of the payment_type code        
+    
