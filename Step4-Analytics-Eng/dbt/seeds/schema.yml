@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 seeds: 
   - name: taxi_zone_lookup

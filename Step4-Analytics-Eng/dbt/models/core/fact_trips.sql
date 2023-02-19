@@ -1,4 +1,10 @@
-{{ config(materialized='table') }}
+{{ config(materialized='table',
+    partition_by={
+      "field": "pickup_datetime",
+      "data_type": "timestamp",
+      "granularity": "day"},
+      cluster_by = "vendorid",
+) }}
 
 with green_data as (
     select *, 
