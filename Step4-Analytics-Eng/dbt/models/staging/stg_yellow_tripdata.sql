@@ -5,7 +5,7 @@ with tripdata as
   select *,
     row_number() over(partition by CAST(vendorid as integer), tpep_pickup_datetime) as rn
   from {{ source('staging','yellow_tripdata_ext2') }}
-  where vendorid is not null 
+  where SAFE_CAST(VendorID AS integer) IS NOT NULL
   and EXTRACT(YEAR FROM tpep_pickup_datetime) IN (2019,2020)  
 )
 select

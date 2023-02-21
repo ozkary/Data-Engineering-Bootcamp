@@ -5,7 +5,7 @@ with tripdata as
   select *,
     row_number() over(partition by CAST(vendorid AS integer), lpep_pickup_datetime) as rn
   from {{ source('staging','green_tripdata_ext') }}
-  where VendorID IS NOT NULL
+  where SAFE_CAST(VendorID AS integer) IS NOT NULL
   and EXTRACT(YEAR FROM lpep_pickup_datetime) IN (2019,2020)  
 )
 select
@@ -21,7 +21,7 @@ select
     cast(lpep_dropoff_datetime as timestamp) as dropoff_datetime,
     
     -- trip info
-    cast(store_and_fwd_flag as string) as store_and_fwd_flag,
+    store_and_fwd_flag,
     cast(passenger_count as integer) as passenger_count,
     cast(trip_distance as numeric) as trip_distance,
     cast(trip_type as integer) as trip_type,

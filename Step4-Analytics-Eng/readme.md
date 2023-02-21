@@ -1,6 +1,6 @@
 # Overview of Analytics Engineering
 
-**Note: Look at the dbt folder for the entire source code**
+**Note: Look at the dbt folder for the source code**
 
 A data Analyst Engineer is a role in which there is expertise in software Engineer best practices as well as the ability to perform data analysts tasks. With the specialization of roles
 of roles in Data Engineering, developers became either:
@@ -163,9 +163,9 @@ sources:
 
 ### Build the entire model with a full dataset
 - Build the fact tables (test run with row count limit)
-    - $ dbt build --m dim_zones 
-    - $ dbt build --m fact_trips 
-    - $ dbt build --m fact_fhv_trips
+    - $ dbt build --select m dim_zones 
+    - $ dbt build --select fact_trips 
+    - $ dbt build --select fact_fhv_trips
     - Validate the tables in BigQuery
     - $ dbt build  --var 'is_test_run: false'
 - Build the entire dataset (no rowcount limit)    

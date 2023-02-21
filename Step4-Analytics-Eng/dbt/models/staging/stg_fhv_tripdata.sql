@@ -6,7 +6,6 @@ with tripdata as
     1 as payment_type,
     row_number() over(partition by Affiliated_base_number, pickup_datetime) as rn
   from {{ source('staging','fhv_rides') }}
-  where Affiliated_base_number is not null 
 )
 select
     -- identifiers
@@ -20,15 +19,15 @@ select
     dropoff_datetime,
 
      -- locations
-    cast(pulocationid as string) as pickup_locationid,
-    cast(dolocationid as string) as dropoff_locationid,
+    cast(pulocationid as integer) as pickup_locationid,
+    cast(dolocationid as integer) as dropoff_locationid,
        
     -- trip info
     SR_Flag as share_ride,
     payment_type,
     {{ get_payment_type_description('payment_type') }} as payment_type_description
 from tripdata
-where rn = 1
+-- where rn = 1
 
 
 -- dbt build --m <model.sql> --var 'is_test_run: false'
