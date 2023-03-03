@@ -1,4 +1,7 @@
-gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar
+# Batch Processing with Apache Spark
+<img src="images/ozkary-apache-spark.png" alt="apache-spark"/>
+
+[Source Code](python/)
 
 ### Install Java
 
@@ -44,7 +47,7 @@ val distData = sc.parallelize(data)
 distData.filter(_ < 10).collect()
 ```
 
-[Results](images/spark-shell-test.png)
+<img src="images/spark-shell-test.png" alt="results"/>
 
 ### Configure PySpark Path
 
@@ -69,6 +72,12 @@ Download the csv file into the data folder and run the python script
   $ python3 python/load_zone_lookup.py
 
 ```  
+
+- PySpark Load Zones
+<img src="images/python-load-zones.png" alt="load-zones"/>
+
+- Test Scale SQL
+<img src="images/spark-shell-sql.png" alt="spark-scala-sql"/>
 
 ## Homework
 
@@ -191,7 +200,7 @@ LIMIT 5;
 
 - Q5 Spark’s User Interface which shows application's dashboard runs on which local port?
 
-[Spark Loading](images/spark-loading.png)
+<img src="images/spark-loading.png" alt="results"/>
 
 - Q6 Using the zone lookup data and the fhvhv June 2021 data, what is the name of the most frequent pickup location zone
 
