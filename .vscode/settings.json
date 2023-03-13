@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Step6-Streaming/python"
+    ]
+}

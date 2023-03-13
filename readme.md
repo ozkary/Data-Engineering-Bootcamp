@@ -56,3 +56,5 @@ More...
     - Spark Dataframes
     - Spark SQL
     - Internals: GroupBy and joins
+
+### Week 6: Data Streaming with Kafka

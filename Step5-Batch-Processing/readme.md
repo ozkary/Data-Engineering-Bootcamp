@@ -4,12 +4,13 @@
 [Source Code](python/)
 
 ### Install Java
-
+```
 $ cd ~/
 $ mkdir spark
 $ cd spark
-$wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+$ wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
 $ tar xzfv openjdk-11.0.2_linux-x64_bin.tar.gz
+```
 
 - Permanently add the path to the shell configuration 
 ```
