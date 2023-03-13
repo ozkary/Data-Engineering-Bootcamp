@@ -69,6 +69,7 @@ $docker network list
 ```
 
 <img src="images/docker-network.png" alt="docker network"/>
+
 ```
 # Start Docker-Compose (within the kafka folder)
 # cd kafka
@@ -77,9 +78,11 @@ $ docker compose up -d
 // $ docker compose down
 
 ```
+
 <img src="images/docker-compose-log.png" alt="docker compose running"/>
 
 ## Setup Python Environment for kafka
+
 ```
 $ pip install confluent-kafka configparser
 
