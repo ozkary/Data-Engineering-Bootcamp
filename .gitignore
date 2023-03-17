@@ -4,6 +4,7 @@ Step1-Introduction/docker/ny_taxi_postgres_data
 **/bin/*
 **/obj/*
 *.log
+*.gz
 *.tfstate
 *.backup
 *.parquet

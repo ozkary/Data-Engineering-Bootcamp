@@ -28,7 +28,7 @@ class Producer {
             {
                 var user = users[rnd.Next(users.Length)];
                 var item = items[rnd.Next(items.Length)];
-
+                
                 producer.Produce(topic, new Message<string, string> { Key = user, Value = item },
                     (deliveryReport) =>
                     {

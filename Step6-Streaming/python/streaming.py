@@ -88,6 +88,9 @@ def op_windowed_groupby(df, window_duration, slide_duration):
 
 
 if __name__ == "__main__":
+    """
+        Main entry point for streaming data between kafka and spark        
+    """
     spark = SparkSession.builder.appName('streaming-examples').getOrCreate()
     spark.sparkContext.setLogLevel('WARN')
 

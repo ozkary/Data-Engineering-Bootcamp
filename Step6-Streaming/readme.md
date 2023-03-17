@@ -1,6 +1,17 @@
 # Data Streaming with Kafka
 
-[Python Code](python/)
+[Kafka Producer, Consumer and Streaming Python Code](python/)
+
+- [Data Streaming with Kafka](#data-streaming-with-kafka)
+  - [Kafka Actors](#kafka-actors)
+    - [Topic configurations](#topic-configurations)
+    - [Consumer Configuration](#consumer-configuration)
+    - [Producer Acknowledgement Settings](#producer-acknowledgement-settings)
+  - [Streams vs State](#streams-vs-state)
+  - [Setup Kafka Locally](#setup-kafka-locally)
+  - [Setup Python Environment for kafka](#setup-python-environment-for-kafka)
+  - [Setup Confluent Cloud Topics](#setup-confluent-cloud-topics)
+
 
 Kafka is a distributed event store and stream processor for large volumes of data and real-time integrations.
 
@@ -68,7 +79,7 @@ $docker network list
 
 ```
 
-<img src="images/docker-network.png" alt="docker network"/>
+<img src="images/docker-network.png" alt="ozkary docker network"/>
 
 ```
 # Start Docker-Compose (within the kafka folder)
@@ -79,11 +90,16 @@ $ docker compose up -d
 
 ```
 
-<img src="images/docker-compose-log.png" alt="docker compose running"/>
+<img src="images/docker-compose-log.png" alt="ozkary docker compose running"/>
 
 ## Setup Python Environment for kafka
 
 ```
 $ pip install confluent-kafka configparser
+$ pip install fastavro faust avro
 
 ```
+
+## Setup Confluent Cloud Topics
+
+<img src="images/ozkary-kafka-rides-topics.png" alt="ozkary kafka rides topic"/>
