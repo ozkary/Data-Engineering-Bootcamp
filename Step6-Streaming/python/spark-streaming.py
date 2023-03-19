@@ -80,7 +80,7 @@ def parse_ride_from_stream(df: DataFrame, schema: any):
     return df_parsed
 
 
-def groupby_count(df: DataFrame, columns: List[str]) -> DataFrame:
+def groupby_count(df: DataFrame, columns: any) -> DataFrame:
     """
         Return a dataframe with aggregates for total count
     """
@@ -88,7 +88,7 @@ def groupby_count(df: DataFrame, columns: List[str]) -> DataFrame:
     print('count  schema',df_count.printSchema())
     return df_count
 
-def prepare_df_to_kafka_sink(df: DataFrame, value_columns: List[str], key_column=None) -> DataFrame:
+def prepare_df_to_kafka_topic(df: DataFrame, value_columns: any, key_column=None) -> DataFrame:
     """
         Formats the key/value message for kafka
     """
@@ -166,7 +166,7 @@ def main_flow(params) -> None:
     write_to_console(df_rides)
     
     # get the counts by pickup location
-    field_name = group_by
+    field_name = group_by    
     df_rides_by_pickup_location = groupby_count(df_rides, [field_name])
     write_to_console(df_rides_by_pickup_location)
 
@@ -176,7 +176,7 @@ def main_flow(params) -> None:
     write_to_console(df_rides_joined_by_location)
 
     # format the df to a kafka message
-    df_trip_count_messages = prepare_df_to_kafka_sink(df=df_rides_joined_by_location,
+    df_trip_count_messages = prepare_df_to_kafka_topic(df=df_rides_joined_by_location,
                                                       value_columns=['count'], 
                                                       key_column=field_name)
     write_to_console(df_trip_count_messages)
@@ -192,9 +192,8 @@ if __name__ == "__main__":
     """
         Main entry point for streaming data between kafka and spark        
     """
-
     # os.system('clear')
-    print('running...')
+    print('Spark streaming running...')
     parser = argparse.ArgumentParser(description='Producer : --topic fhv_trips,yellow_trips --groupby pickup_location_id --topic_all rides_all --topic_count rides_by_location  --groupid spark_group --clientid app1 --config path-to-config')
     
     parser.add_argument('--topic', required=True, help='kafka topics')
@@ -212,4 +211,5 @@ if __name__ == "__main__":
 
 
 # usage
-# python3 spark-streaming.py --topic rides_fhv,rides_green --groupBy pickup_location_id --topic_all rides_all --topic_count rides_by_location --groupid all_rides --clientid appAllRides --config ~/.kafka/confluent.properties
+# python3 spark-streaming.py --topic rides_fhv,rides_green --groupby pickup_location_id --topic_all rides_all --topic_count rides_by_location --groupid all_rides --clientid appAllRides --config ~/.kafka/confluent.properties
+# spark-submit spark-streaming.py --topic rides_fhv,rides_green --groupby pickup_location_id --topic_all rides_all --topic_count rides_by_location --groupid all_rides --clientid appAllRides --config ~/.kafka/confluent.properties

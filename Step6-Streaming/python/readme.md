@@ -1,8 +1,9 @@
-# Load the Kafka Applications
+# Kafka Applications
 
-## Load the Producer 
 
-- Load the both producer with different CSV as sources and topic
+## Load the Producers
+
+- Load both producer with different CSV as sources and topic
   
 ```
 
@@ -13,7 +14,7 @@ $ python3 producer.py --topic rides_green --key pickup_location_id --file ../dat
 
 ```
 
-## Load the Consumer
+## Load the Consumer with Multiple tTopics
 
 - Loads the consumer with two topics
 
@@ -23,6 +24,7 @@ $ consumer.py --topic rides_fhv,rides_green --groupid rides --clientid appRideGr
 ```
 
 ## Load the PySpark Streaming Consumer 
+
 - Reads different CSV files and sends to two Kafka topics
   - rides_fhv, rides_green
 - Forwards the data to another topic
@@ -34,7 +36,11 @@ $ consumer.py --topic rides_fhv,rides_green --groupid rides --clientid appRideGr
 
 Note: As with any Spark applications, spark-submit is used to launch your application. spark-sql-kafka-0-10_2.12 and its dependencies can be directly added to spark-submit using --packages
 
+i.e.
+
+
+
 ```
-$ spark-submit spark-streaming.py --topic rides_fhv,rides_green --groupBy pickup_location_id --topic_all rides_all --topic_count rides_by_location --groupid all_rides --clientid appAllRides --config ~/.kafka/confluent.properties
+$ spark-submit # python3 spark-streaming.py --topic rides_fhv,rides_green --groupby pickup_location_id --topic_all rides_all --topic_count rides_by_location --groupid all_rides --clientid appAllRides --config ~/.kafka/confluent.properties
 ```
 

@@ -7,7 +7,12 @@
 # ./bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.2 ...
 # For experimenting on spark-shell, you can also use --packages to add spark-sql-kafka-0-10_2.12 and its dependencies directly,
 
-# ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.2 ...
+# ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.2,org.apache.spark:spark-core_2.12:3.3.2,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.2
+
+# org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.2,
+# org.apache.spark:spark-core_2.12:3.3.2,
+# org.apache.spark:spark-avro_2.12:3.3.2,
+# org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.2 \			 
 
 if [ $# -lt 1 ]
 then
@@ -25,11 +30,6 @@ else
 fi
 spark-submit --master spark://localhost:7077 --num-executors 2 \
 	           --executor-memory $EXEC_MEM --executor-cores 1 \
-             --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1,org.apache.spark:spark-avro_2.12:3.3.1,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.1,org.apache.spark:spark-core_2.12:3.3.1 \
+             --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.2,org.apache.spark:spark-avro_2.12:3.3.2,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.2 \
              $PYTHON_JOB
 
-
-# org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1,
-# org.apache.spark:spark-core_2.12:3.3.1
-# org.apache.spark:spark-avro_2.12:3.3.1,
-# org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.1 \			 
