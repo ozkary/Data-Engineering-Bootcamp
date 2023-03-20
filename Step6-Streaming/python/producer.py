@@ -74,10 +74,7 @@ def read_records(topic: str, file_path: str, key: str):
                     value = row
                     print('Message id=',loc_id, value) 
                     records.append(value)      
-                    break      
-            # except StopIteration as ex:
-            #     print(f"Finished reading file {ex}")
-            #     return
+                    # break                  
             except KeyboardInterrupt:
                 pass
             except Exception as ex:
@@ -144,3 +141,4 @@ if __name__ == '__main__':
 # usage
 # python3 producer.py --topic rides_fhv --key pickup_location_id --file ../data/fhv_tripdata_2019-01.csv.gz --config ~/.kafka/confluent.properties
 # python3 producer.py --topic rides_green --key pickup_location_id --file ../data/green_tripdata_2019-01.csv.gz --config ~/.kafka/confluent.properties
+# python3 producer.py --topic rides_fhv --key pickup_location_id --file ../data/fhv_tripdata_2019-01.csv.gz --config ~/.kafka/localhost.config

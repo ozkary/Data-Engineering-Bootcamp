@@ -10,7 +10,7 @@ import os
 import pyspark
 from pyspark.sql import SparkSession, DataFrame, types
 import pyspark.sql.functions as F
-from settings import read_config, key_deserializer, value_deserializer
+from settings import read_config, key_serializer, value_serializer
 from schema import rides_schema
 
 spark = SparkSession.builder \
@@ -49,7 +49,7 @@ def read_kafka_stream(topic: str, config: any) -> DataFrame:
     df_stream = spark \
         .readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", server) \
+        .option("kafka.bootstrap.servers",F"{server},localhost:9092") \
         .option("subscribe", topic) \
         .option("kafka.client.id", clientid)\
         .option("kafka.group.id", groupid)\
@@ -94,10 +94,10 @@ def prepare_df_to_kafka_topic(df: DataFrame, value_columns: any, key_column=None
     """
     columns = df.columns
 
-    df = df.withColumn("value", F.concat_ws(', ', *value_columns))
+    df = df.withColumn("value", value_serializer(df))
     if key_column:
         df = df.withColumnRenamed(key_column, "key")
-        df = df.withColumn("key", df.key.cast('string'))
+        df = df.withColumn("key", key_serializer(df.key.cast('string')))
     df_messages = df.select(['key', 'value'])
             
     print('count  schema',df_messages.printSchema())
