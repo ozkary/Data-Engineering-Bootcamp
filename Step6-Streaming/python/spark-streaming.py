@@ -100,7 +100,7 @@ def prepare_df_to_kafka_topic(df: DataFrame, value_columns: any, key_column=None
         df = df.withColumn("key", key_serializer(df.key.cast('string')))
     df_messages = df.select(['key', 'value'])
             
-    print('count  schema',df_messages.printSchema())
+    print('count schema',df_messages.printSchema())
     return df_messages
 
 def load_zones() -> DataFrame:
