@@ -1,6 +1,9 @@
 version: 2
 
 seeds: 
+  - name: remote_booth_station
+    description: >
+      Provides the remote booth and station lookup information for the MTA subway system
   - name: taxi_zone_lookup
     description: >
       Taxi Zones roughly based on NYC Department of City Planning's Neighborhood

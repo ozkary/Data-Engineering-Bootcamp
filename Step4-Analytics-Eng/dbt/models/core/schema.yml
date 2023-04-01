@@ -1,30 +1,92 @@
 version: 2
 
 models:
-  - name: dim_zones
+  - name: dim_station
     description: >
-      List of unique zones idefied by locationid. 
-      Includes the service zone they correspond to (Green or yellow).
-  - name: fact_fhv_trips
-    description: >
-      Taxi trips corresponding to both service zones (Green and yellow).
-      The table contains records where both pickup and dropoff locations are valid and known zones. 
-      Each record corresponds to a trip uniquely identified by tripid. 
-  - name: fact_trips
-    description: >
-      Taxi trips corresponding to both service zones (Green and yellow).
-      The table contains records where both pickup and dropoff locations are valid and known zones. 
-      Each record corresponds to a trip uniquely identified by tripid. 
-      
-  - name: dm_monthly_zone_revenue
-    description: >
-      Aggregated table of all taxi trips corresponding to both service zones (Green and yellow) per pickup zone, month and service.
-      The table contains monthly sums of the fare elements used to calculate the monthly revenue. 
-      The table contains also monthly indicators like number of trips, and average trip distance. 
+      List of unique stations idefied by station_id.       
     columns:
-      - name: revenue_monthly_total_amount
-        description: Monthly sum of the the total_amount of the fare charged for the trip per pickup zone, month and service.
-        tests:
-            - not_null:
-                severity: error
-      
+          - name: station_id
+            description: The station identifier            
+            tests:
+                - unique:
+                    severity: warn
+                - not_null:
+                    severity: warn
+          - name: station_name
+            description: the station name
+            tests:
+                - not_null:
+                    severity: warn
+
+  - name: dim_booth
+    description: >
+      List of unique booth idefied by booth_id.  
+    columns:
+          - name: booth_id
+            description: The booth identifier            
+            tests:
+                - unique:
+                    severity: warn
+                - not_null:
+                    severity: warn
+          - name: remote
+            description: the remote gate name
+            tests:
+                - not_null:
+                    severity: warn
+          - name: booth_name
+            description: the station booth
+            tests:
+                - not_null:
+                    severity: warn
+          - name: station_id
+            description: the station id
+            tests:
+                - not_null:
+                    severity: warn
+  - name: fact_turnstile
+    description: >
+     Represents the daily entries and exits associated to boths in subway stations
+    columns:
+          - name: log_id
+            description: Primary key for this table, generated with a concatenation CA, SCP,UNIT, STATION CREATED            
+            tests:
+                - unique:
+                    severity: warn
+                - not_null:
+                    severity: warn
+          - name: booth_id
+            description: foreign key to the booth dimension            
+            tests:
+               - relationships:
+                  to: ref('dim_booth')
+                  field: booth_id
+                  severity: warn
+          - name: station_id          
+            description:  The foreign key to the station dimension            
+            tests:
+               - relationships:
+                  to: ref('dim_station')
+                  field: station_id
+                  severity: warn
+          - name: scp
+            description: The device address
+          - name: line_name
+            description: The subway line
+          - name: division
+            description: The subway division          
+          - name: created_dt
+            description: The date time for the activity
+            tests:
+                - not_null:
+                    severity: warn
+          - name: entries
+            description: The number of entries
+            tests:
+                - not_null:
+                    severity: warn
+          - name: exits
+            description: the number of exits 
+            tests:
+                - not_null:
+                    severity: warn
