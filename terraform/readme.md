@@ -10,6 +10,14 @@ Execution
 # Refresh service-account's auth-token for this session
 gcloud auth application-default login
 
+# Set the credentials file on the bash configuration file
+$ nano ~/.bashrc
+ 
+ Add the export line
+ export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.gcp/filename-here.json"
+
+ Save the file
+
 # Open the terraform folder in your project
 
 # Initialize state file (.tfstate) one time run which should create main.tf

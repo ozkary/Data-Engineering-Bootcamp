@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import argparse
+import os
 from pathlib import Path
 from prefect_gcp import GcpCredentials
 from prefect_gcp.cloud_storage import GcsBucket
@@ -28,6 +29,8 @@ def main(params) -> None:
             )
             # save the bucket
             bucket_block.save(gcs_block_name, overwrite=True)
+            print(F'{gcs_block_name} was saved')
+            os.system('prefect block ls')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Ingest CSV data to Postgres')

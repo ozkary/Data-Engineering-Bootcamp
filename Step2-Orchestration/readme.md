@@ -11,13 +11,14 @@ Open the working directory where the requirements file is located to install the
 
 **Note: Make sure to run the terraform script on Week 1 to build the datalake and BigQuery resources.**
 
-**Note: Make sure to run the terraform script on Week 1 to build the datalake and BigQuery resources.**
-
 Copy the GCP credentials to follow this format
 - $ cd ~ && mkdir -p ~/.gcp/
 - $ cp <path to JSON file> ~/.gcp/credentials.json
 
 ### Create the PREFECT Cloud Account
+- Login with preface cloud to host the blocks and the deployments, view the dashboards
+  - preface cloud login
+    - This creates a key file ~/.prefect/profiles.toml
 - Add a prefect block with the GCP credentials
 - Run terraform plan to get the GCP resource names
 
@@ -41,9 +42,13 @@ Copy the GCP credentials to follow this format
 
 ### Install the prefect blocks and install our custom blocks for GCP credentials and GCS access
 - $ prefect block register -m prefect_gcp
+- $ prefect block ls
 - $ cd ./Step2-Orchestration/prefect/blocks
-- $ python gcp_acc_block.py --file_path=/home/codespace/.gcp/ozkary-de-101.json --gcp_acc_block_name=blk-gcp-svc-acc
-- $ python gcs_block.py --gcp_acc_block_name=blk-gcp-svc-acc --gcs_bucket_name=ozkary_data_lake_ozkary-de-101 --gcs_block_name=blk-gcs-name
+- $ python gcp_acc_block.py --file_path=~/.gcp/ozkary-de-101.json --gcp_acc_block_name=blk-gcp-svc-acc
+# this file import the credentials block
+- $ python3 gcs_block.py --gcp_acc_block_name=blk-gcp-svc-acc --gcs_bucket_name=ozkary_data_lake_ozkary-de-101 --gcs_block_name=blk-gcs-name
+
+https://prefecthq.github.io/prefect-gcp/
 
 ### Create a docker image and push to DockerHub
 - $ docker login --username USER --password PW
@@ -60,7 +65,7 @@ Copy the GCP credentials to follow this format
 - $ python docker_deploy_etl_gcs_to_bq.py --block_name=blk-docker-de-101 --deploy_name=dep-docker-de-gbq-101
 - $ prefect deployments ls
 - $ prefect agent start -q default
-- $ prefect deployment run dep-docker-de-101 -p "year=2020 month=1 color=green block_name=blk-gcs-name"
+- $ prefect deployment run dep-docker-de-gcs-101 -p "year=2020 month=1 color=green block_name=blk-gcs-name"
 
 ### Manual Test Runs (Test Plan)
 - $ python etl_web_to_gcs.py --year=2020 --month=1 --color=green --block_name=blk-gcs-name

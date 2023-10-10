@@ -58,3 +58,10 @@ More...
     - Internals: GroupBy and joins
 
 ### Week 6: Data Streaming with Kafka
+- Kafka Actors
+  - Topic
+  - Consumer
+  - Producer
+- Streams vs State
+- Aggregates
+- Streaming with Spark
